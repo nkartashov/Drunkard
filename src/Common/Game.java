@@ -9,9 +9,9 @@
  * The following text is protected by GPLv2 licence
  * (http://www.gnu.org/licenses/gpl-2.0.html)
  */
-package Common;
+package common;
 
-import CellOccupants.LampPost;
+import cell_occupants.LampPost;
 
 public class Game {
 	public Game() {

@@ -1,6 +1,6 @@
-package Common;
+package common;
 
-import CellOccupants.CellOccupant;
+import cell_occupants.CellOccupant;
 
 /**
  * Cell

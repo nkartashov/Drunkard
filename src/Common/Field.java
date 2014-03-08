@@ -1,8 +1,8 @@
-package Common;
+package common;
 
-import CellOccupants.CellOccupant;
-import CellOccupants.Drunkard.Drunkard;
-import CellOccupants.Nobody;
+import cell_occupants.CellOccupant;
+import cell_occupants.drunkard.Drunkard;
+import cell_occupants.Nobody;
 
 import java.util.ArrayList;
 import java.util.List;
