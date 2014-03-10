@@ -23,6 +23,7 @@ public class Bottle extends CellOccupant {
 	@Override
 	public Cell acceptVisit(Drunkard drunkard) {
 		drunkard.changeState(new FallenDrunkardState());
+		getCell().getField().removeSubscriber(drunkard);
 		return null;
 	}
 

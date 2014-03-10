@@ -22,6 +22,7 @@ public class SleepingDrunkardState implements DrunkardState {
 	@Override
 	public Cell acceptVisit(Drunkard drunkard) {
 		drunkard.changeState(new SleepingDrunkardState());
+		drunkard.getCell().getField().removeSubscriber(drunkard);
 		return null;
 	}
 

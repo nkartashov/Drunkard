@@ -23,6 +23,7 @@ public class LampPost extends CellOccupant {
 	@Override
 	public Cell acceptVisit(Drunkard drunkard) {
 		drunkard.changeState(new SleepingDrunkardState());
+		getCell().getField().removeSubscriber(drunkard);
 		return null;
 	}
 

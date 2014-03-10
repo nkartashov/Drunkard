@@ -55,7 +55,7 @@ public class Field implements INotifiable {
 	}
 
 	public void removeSubscriber(INotifiable subscriber) {
-		subscribers.remove(subscriber);
+		subscribersToRemove.add(subscriber);
 	}
 
 	public void display(int move) {
@@ -75,16 +75,27 @@ public class Field implements INotifiable {
 	@Override
 	public void receiveNotification(int notification) {
 		final int DRUNKARD_COOLDOWN = 20;
-		if (notification % DRUNKARD_COOLDOWN == 0)
+		if (notification % DRUNKARD_COOLDOWN == 0) {
 			addDrunkard();
-		for (INotifiable subscriber: subscribers) {
-			subscriber.receiveNotification(notification);
 		}
+		informSubscribersAboutMove(notification);
+		updateSubscribers();
 		display(notification);
 	}
 
 	public boolean isInField(int x, int y) {
 		return x >= 0 && y >= 0 && x < width && y < height;
+	}
+
+	private void updateSubscribers() {
+		subscribers.removeAll(subscribersToRemove);
+		subscribersToRemove.clear();
+	}
+
+	private void informSubscribersAboutMove(int moveNumber) {
+		for (INotifiable subscriber: subscribers) {
+			subscriber.receiveNotification(moveNumber);
+		}
 	}
 
 	private void addDrunkard() {
@@ -99,6 +110,7 @@ public class Field implements INotifiable {
 	private Cell[][] cells;
 	private final int height;
 	private final int width;
+	private final List<INotifiable> subscribersToRemove = new ArrayList<INotifiable>();
 	private final List<INotifiable> subscribers = new ArrayList<INotifiable>();
 
 }
