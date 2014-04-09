@@ -11,21 +11,26 @@
  */
 package cell_occupants.drunkard;
 
-import common.Cell;
+import common.CellOccupant;
 
-public class FallenDrunkardState implements DrunkardState {
-	@Override
-	public Cell makeMove(Drunkard drunkard) {
-		return null;
-	}
-
-	@Override
-	public Cell acceptVisit(Drunkard drunkard) {
-		return null;
-	}
+public class FallenDrunkardState extends DrunkardState {
 
 	@Override
 	public String displayItself() {
 		return "&";
+	}
+
+	@Override
+	public void receiveNotification(int notification, CellOccupant occupant) {
+	}
+
+	@Override
+	public boolean isFallen() {
+		return true;
+	}
+
+	@Override
+	public boolean isSleeping() {
+		return false;
 	}
 }

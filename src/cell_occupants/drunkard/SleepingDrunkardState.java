@@ -11,23 +11,25 @@
  */
 package cell_occupants.drunkard;
 
-import common.Cell;
+import common.CellOccupant;
 
-public class SleepingDrunkardState implements DrunkardState {
-	@Override
-	public Cell makeMove(Drunkard drunkard) {
-		return null;
-	}
-
-	@Override
-	public Cell acceptVisit(Drunkard drunkard) {
-		drunkard.changeState(new SleepingDrunkardState());
-		drunkard.getCell().getField().removeSubscriber(drunkard);
-		return null;
-	}
-
+public class SleepingDrunkardState extends DrunkardState {
 	@Override
 	public String displayItself() {
 		return "Z";
+	}
+
+	@Override
+	public void receiveNotification(int notification, CellOccupant occupant) {
+	}
+
+	@Override
+	public boolean isFallen() {
+		return false;
+	}
+
+	@Override
+	public boolean isSleeping() {
+		return true;
 	}
 }

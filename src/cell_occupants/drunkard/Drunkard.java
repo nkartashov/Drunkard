@@ -11,55 +11,24 @@
  */
 package cell_occupants.drunkard;
 
-import cell_occupants.Bottle;
-import cell_occupants.CellOccupant;
 import common.Cell;
-import common.INotifiable;
+import common.CellOccupant;
 
-public class Drunkard extends CellOccupant implements INotifiable, IDrunkard {
+public class Drunkard extends CellOccupant {
 	public Drunkard(Cell cell) {
 		super(cell);
+		setState(new NormalDrunkardState());
+	}
+
+	BottleObject getBottle() {return bottle;}
+	void setBottle(BottleObject bottle) {
+		this.bottle = bottle;
 	}
 
 	@Override
-	public void receiveNotification(int notification) {
-		Cell moveResult = makeMove();
-		handleMoveResult(moveResult);
-	}
-
-	@Override
-	public Cell makeMove() {
-		return state.makeMove(this);
-	}
-
-	@Override
-	public Cell acceptVisit(Drunkard drunkard) {
-		return state.acceptVisit(drunkard);
-	}
-
-	@Override
-	public Cell acceptVisit(CellOccupant occupant) {
-		return null;
-	}
-
-	@Override
-	public String displayItself() {
-		return state.displayItself();
-	}
-
-	public void changeState(DrunkardState state) {
-		this.state = state;
-	}
-
-	private void handleMoveResult(Cell cell) {
-		if (cell != null) {
-			if (bottle != null && (int) (Math.random() * 30) == 1) {
-				cell.setOccupant(new Bottle(cell));
-				bottle = null;
-			}
-		}
+	public DrunkardState getState() {
+		return (DrunkardState) super.getState();
 	}
 
 	private BottleObject bottle = new BottleObject();
-	private DrunkardState state = new NormalDrunkardState();
 }

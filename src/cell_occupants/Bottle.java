@@ -11,25 +11,13 @@
  */
 package cell_occupants;
 
-import cell_occupants.drunkard.Drunkard;
-import cell_occupants.drunkard.FallenDrunkardState;
 import common.Cell;
+import common.CellOccupant;
 
 public class Bottle extends CellOccupant {
 	public Bottle(Cell cell) {
 		super(cell);
-	}
-
-	@Override
-	public Cell acceptVisit(Drunkard drunkard) {
-		drunkard.changeState(new FallenDrunkardState());
-		getCell().getField().removeSubscriber(drunkard);
-		return null;
-	}
-
-	@Override
-	public Cell acceptVisit(CellOccupant occupant) {
-		return null;
+		cell.getField().notifyBottle(this);
 	}
 
 	@Override

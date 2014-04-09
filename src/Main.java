@@ -1,8 +1,5 @@
-import common.Game;
-
 /**
  * Main
-
  *
  * Version 1.0.0
  *
@@ -11,6 +8,8 @@ import common.Game;
  * The following text is protected by GPLv2 licence
  * (http://www.gnu.org/licenses/gpl-2.0.html)
  */
+
+import common.Game;
 
 public class Main {
 	public static void main(String[] args) {

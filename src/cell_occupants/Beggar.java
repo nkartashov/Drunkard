@@ -1,5 +1,5 @@
 /**
- * LampPost
+ * Beggar
  *
  * Version 1.0.0
  *
@@ -10,16 +10,17 @@
  */
 package cell_occupants;
 
+
 import common.Cell;
 import common.CellOccupant;
 
-public class LampPost extends CellOccupant {
-	public LampPost(Cell cell) {
+public class Beggar extends CellOccupant {
+	public Beggar(Cell cell) {
 		super(cell);
 	}
 
 	@Override
 	public String displayItself() {
-		return "L";
+		return "z";
 	}
 }

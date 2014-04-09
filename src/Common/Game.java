@@ -12,6 +12,7 @@
 package common;
 
 import cell_occupants.LampPost;
+import cell_occupants.Post;
 
 public class Game {
 	public Game() {
@@ -29,10 +30,24 @@ public class Game {
 		final int fieldWidth = 15;
 		field = new Field(fieldHeight, fieldWidth);
 
-		final int lampPostX = 7;
-		final int lampPostY = 7;
-		field.putObstacle(new LampPost(field.getCell(lampPostX, lampPostY)),
-				lampPostX, lampPostY);
+		final int postX = 7;
+		final int postY = 7;
+		field.putObstacle(new Post(field.getCell(postX, postY)),
+				postX, postY);
+
+		final int lampPostX = 10;
+		final int lampPostY = 3;
+		field.putObstacle(new LampPost(field.getCell(lampPostX, lampPostY)), lampPostX, lampPostY);
+
+		for (int deltaX = -3; deltaX < 4; deltaX++) {
+			for (int deltaY = -3; deltaY < 4; deltaY++) {
+				int x = lampPostX + deltaX;
+				int y = lampPostY + deltaY;
+				if (field.isInField(x, y)) {
+					field.getCell(x, y).getCellTraits().applyLight();
+				}
+			}
+		}
 	}
 
 	private static final int MAX_MOVES = 100;
