@@ -12,6 +12,7 @@
 
 package common;
 
+import OccupantFactories.AbstractOccupantSpawn;
 import common.actor_states.OccupantState;
 import common.actor_states.PassiveState;
 
@@ -45,6 +46,14 @@ public abstract class CellOccupant implements IDisplayable, INotifiable {
 		this.state = state;
 	}
 
+	public AbstractOccupantSpawn getSpawn() {
+		return spawn;
+	}
+
+	public void setSpawn(AbstractOccupantSpawn spawn) {
+		this.spawn = spawn;
+	}
+
 	protected void swapOccupants(CellOccupant occupant) {
 		Cell oldCell = occupant.getCell();
 		Cell newCell = getCell();
@@ -60,6 +69,7 @@ public abstract class CellOccupant implements IDisplayable, INotifiable {
 		}
 	}
 
+	private AbstractOccupantSpawn spawn = null;
 	private Cell cell;
 	private OccupantState state = new PassiveState();
 	private int lastNotification = -1;

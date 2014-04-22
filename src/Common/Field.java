@@ -1,13 +1,9 @@
 package common;
 
-import cell_occupants.Beggar;
+import OccupantFactories.AbstractOccupantSpawn;
 import cell_occupants.Bottle;
 import cell_occupants.Nobody;
-import cell_occupants.Policeman;
 import cell_occupants.drunkard.Drunkard;
-import common.actor_states.MovingState;
-import common.actor_states.OccupantState;
-import common.actor_states.PassiveState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +42,11 @@ public class Field implements INotifiable {
 	}
 
 	public void putObstacle(CellOccupant obstacle, int x, int y) throws IndexOutOfBoundsException {
-		getCell(x, y).setOccupant(obstacle);
+		DoubleDispatch.dispatch(obstacle, getCell(x, y).getOccupant());
+	}
+
+	public void addSpawn(AbstractOccupantSpawn spawn) {
+		spawns.add(spawn);
 	}
 
 	public void display(int move) {
@@ -64,26 +64,15 @@ public class Field implements INotifiable {
 	}
 
 	public void receiveNotification(int notification) {
-		final int DRUNKARD_COOLDOWN = 20;
-		if (notification % DRUNKARD_COOLDOWN == 0) {
-			addDrunkard();
-		}
-		if (beggarCooldown == 0) {
-			addBeggar();
-		} else {
-			if (beggarCooldown > 0) {
-				beggarCooldown--;
-			}
-		}
-		if (policemanCooldown == 0 && !litDrunkards.isEmpty()) {
-			addPoliceman();
-		} else {
-			if (policemanCooldown > 0) {
-				policemanCooldown--;
-			}
-		}
+		informSpawnsAboutMove(notification);
 		informSubscribersAboutMove(notification);
 		display(notification);
+	}
+
+	public void informSpawnsAboutMove(int move) {
+		for (AbstractOccupantSpawn spawn : spawns) {
+			spawn.spawnOccupant(move);
+		}
 	}
 
 	public boolean isInField(int x, int y) {
@@ -117,10 +106,6 @@ public class Field implements INotifiable {
 
 	public void notifyBottle(Bottle bottle) {
 		bottles.add(bottle);
-		if (beggar.getState() instanceof PassiveState) {
-			Cell goal = bottle.getCell();
-			beggar.setState(new MovingState(new Bfs(goal, this)));
-		}
 	}
 
 	public void notifyBottleDealtWith(Bottle bottle) {
@@ -133,20 +118,13 @@ public class Field implements INotifiable {
 		cell.setOccupant(new Nobody(cell));
 	}
 
-	public void resetBeggarCooldown() {
-		beggarCooldown = 30;
+	public List<Drunkard> getLitDrunkards() {
+		return litDrunkards;
 	}
 
-	public void resetPolicemanCooldown() {
-		policemanCooldown = 0;
+	public List<Bottle> getBottles() {
+		return bottles;
 	}
-
-	public final int POLICEMAN_SPAWN_X = 14;
-	public final int POLICEMAN_SPAWN_Y = 3;
-	public final int DRUNKARD_SPAWN_X = 9;
-	public final int DRUNKARD_SPAWN_Y = 0;
-	public final int BEGGAR_SPAWN_X = 0;
-	public final int BEGGAR_SPAWN_Y = 4;
 
 	private void informSubscribersAboutMove(int notification) {
 		for (int i = 0; i < width; ++i) {
@@ -156,44 +134,10 @@ public class Field implements INotifiable {
 		}
 	}
 
-	private void addDrunkard() {
-		if (!isInField(DRUNKARD_SPAWN_X, DRUNKARD_SPAWN_Y)) {
-			return;
-		}
-		Cell cell = cells[DRUNKARD_SPAWN_Y][DRUNKARD_SPAWN_X];
-		Drunkard drunkard = new Drunkard(cell);
-		DoubleDispatch.dispatch(drunkard, cell.getOccupant());
-	}
-
-	private void addPoliceman() {
-		Cell cell = cells[POLICEMAN_SPAWN_Y][POLICEMAN_SPAWN_X];
-		Policeman policeman = new Policeman(cell);
-		OccupantState movingState = new MovingState(new Bfs(litDrunkards.get(0).getCell(), this));
-		policeman.setState(movingState);
-		DoubleDispatch.dispatch(policeman, cell.getOccupant());
-		policemanCooldown = -1;
-	}
-
-	private void addBeggar() {
-		Cell cell = cells[BEGGAR_SPAWN_Y][BEGGAR_SPAWN_X];
-		beggar = new Beggar(cell);
-		OccupantState movingState;
-		if (!bottles.isEmpty()) {
-			movingState = new MovingState(new Bfs(bottles.get(0).getCell(), this));
-		} else {
-			movingState = new PassiveState();
-		}
-		beggar.setState(movingState);
-		DoubleDispatch.dispatch(beggar, cell.getOccupant());
-		beggarCooldown = -1;
-	}
-
 	private Cell[][] cells;
 	private final int height;
 	private final int width;
 	private final List<Bottle> bottles = new ArrayList<>();
 	private final List<Drunkard> litDrunkards = new ArrayList<>();
-	private int beggarCooldown = 0;
-	private int policemanCooldown = 0;
-	private Beggar beggar;
+	private final List<AbstractOccupantSpawn> spawns = new ArrayList<>();
 }

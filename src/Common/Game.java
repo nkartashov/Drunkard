@@ -11,6 +11,9 @@
  */
 package common;
 
+import OccupantFactories.BeggarSpawn;
+import OccupantFactories.PoliceStation;
+import OccupantFactories.Tavern;
 import cell_occupants.LampPost;
 import cell_occupants.Post;
 
@@ -39,15 +42,17 @@ public class Game {
 		final int lampPostY = 3;
 		field.putObstacle(new LampPost(field.getCell(lampPostX, lampPostY)), lampPostX, lampPostY);
 
-		for (int deltaX = -3; deltaX < 4; deltaX++) {
-			for (int deltaY = -3; deltaY < 4; deltaY++) {
-				int x = lampPostX + deltaX;
-				int y = lampPostY + deltaY;
-				if (field.isInField(x, y)) {
-					field.getCell(x, y).getCellTraits().applyLight();
-				}
-			}
-		}
+		final int tavernX = 9;
+		final int tavernY = 0;
+		field.addSpawn(new Tavern(tavernX, tavernY, field));
+
+		final int policeStationX = 14;
+		final int policeStationY = 3;
+		field.addSpawn(new PoliceStation(policeStationX, policeStationY, field));
+
+		final int beggarSpawnX = 0;
+		final int beggarSpawnY = 4;
+		field.addSpawn(new BeggarSpawn(beggarSpawnX, beggarSpawnY, field));
 	}
 
 	private static final int MAX_MOVES = 100;

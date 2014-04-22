@@ -24,16 +24,33 @@ public class DoubleDispatch {
 		return oldCell;
 	}
 
+	public static Cell dispatch(LampPost who, Nobody where) {
+		Cell oldCell = who.getCell();
+		where.swapOccupants(who);
+
+		// Apply light
+		for (int deltaX = -3; deltaX < 4; deltaX++) {
+			for (int deltaY = -3; deltaY < 4; deltaY++) {
+				int x = who.getCell().getX() + deltaX;
+				int y = who.getCell().getY() + deltaY;
+				if (who.getCell().getField().isInField(x, y)) {
+					who.getCell().getField().getCell(x, y).getCellTraits().applyLight();
+				}
+			}
+		}
+		return oldCell;
+	}
+
 	public static Cell dispatch(final Beggar who, Bottle where) {
 		final Field field = who.getCell().getField();
 		field.removeOccupant(where.getCell());
 		field.notifyBottleDealtWith(where);
-		Cell goal = field.getCell(field.BEGGAR_SPAWN_X, field.BEGGAR_SPAWN_Y);
+		Cell goal = field.getCell(who.getSpawn().getX(), who.getSpawn().getY());
 		SuccessHandler handler = new SuccessHandler() {
 			@Override
 			public void handle() {
 				field.removeOccupant(who.getCell());
-				field.resetBeggarCooldown();
+				who.getSpawn().resetCooldown();
 			}
 		};
 		who.setState(new TerminatingState(new Bfs(goal, field), handler));
@@ -65,12 +82,12 @@ public class DoubleDispatch {
 			final Field field = who.getCell().getField();
 			field.removeOccupant(where.getCell());
 			field.notifyDrunkardDealtWith(where);
-			Cell goal = field.getCell(field.POLICEMAN_SPAWN_X, field.POLICEMAN_SPAWN_Y);
+			Cell goal = field.getCell(who.getSpawn().getX(), who.getSpawn().getY());
 			SuccessHandler handler = new SuccessHandler() {
 				@Override
 				public void handle() {
 					field.removeOccupant(who.getCell());
-					field.resetPolicemanCooldown();
+					who.getSpawn().resetCooldown();
 				}
 			};
 			who.setState(new TerminatingState(new Bfs(goal, field), handler));
@@ -80,7 +97,12 @@ public class DoubleDispatch {
 
 	public static Cell dispatch(CellOccupant who, CellOccupant where) {
 		if (where instanceof Nobody) {
-			return dispatch(who, (Nobody) where);
+			Nobody nobody = (Nobody) where;
+			if (who instanceof LampPost) {
+				return dispatch((LampPost) who, nobody);
+			} else {
+				return dispatch(who, nobody);
+			}
 		} else if (who instanceof Drunkard) {
 			Drunkard drunkard = (Drunkard) who;
 			if (where instanceof Bottle) {
