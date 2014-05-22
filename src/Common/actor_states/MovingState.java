@@ -10,7 +10,7 @@
  */
 package common.actor_states;
 
-import common.Cell;
+import common.cells.Cell;
 import common.CellOccupant;
 import common.DoubleDispatch;
 import common.PathAlgorithm;

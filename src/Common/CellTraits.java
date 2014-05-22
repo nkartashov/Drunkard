@@ -12,7 +12,7 @@ package common;
 
 public class CellTraits {
 
-	CellTraits() {}
+	public CellTraits() {}
 
 	public void applyLight() {
 		isLit = true;

@@ -12,10 +12,11 @@
 package common;
 
 import OccupantFactories.BeggarSpawn;
-import OccupantFactories.PoliceStation;
 import OccupantFactories.Tavern;
 import cell_occupants.LampPost;
 import cell_occupants.Post;
+import common.fields.Field;
+import common.fields.HexagonalField;
 
 public class Game {
 	public Game() {
@@ -31,7 +32,7 @@ public class Game {
 	private void init() {
 		final int fieldHeight = 15;
 		final int fieldWidth = 15;
-		field = new Field(fieldHeight, fieldWidth);
+		field = new HexagonalField(fieldHeight, fieldWidth);
 
 		final int postX = 7;
 		final int postY = 7;
@@ -48,7 +49,7 @@ public class Game {
 
 		final int policeStationX = 14;
 		final int policeStationY = 3;
-		field.addSpawn(new PoliceStation(policeStationX, policeStationY, field));
+		//field.addSpawn(new PoliceStation(policeStationX, policeStationY, field));
 
 		final int beggarSpawnX = 0;
 		final int beggarSpawnY = 4;

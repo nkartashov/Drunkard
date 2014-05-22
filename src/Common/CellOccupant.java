@@ -15,6 +15,7 @@ package common;
 import OccupantFactories.AbstractOccupantSpawn;
 import common.actor_states.OccupantState;
 import common.actor_states.PassiveState;
+import common.cells.Cell;
 
 
 public abstract class CellOccupant implements IDisplayable, INotifiable {

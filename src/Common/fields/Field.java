@@ -1,9 +1,14 @@
-package common;
+package common.fields;
 
 import OccupantFactories.AbstractOccupantSpawn;
 import cell_occupants.Bottle;
 import cell_occupants.Nobody;
 import cell_occupants.drunkard.Drunkard;
+import common.CellOccupant;
+import common.DoubleDispatch;
+import common.INotifiable;
+import common.cells.Cell;
+import common.cells.CellFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +25,18 @@ import java.util.List;
  * (http://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-public class Field implements INotifiable {
-	public Field(int height, int width) throws IndexOutOfBoundsException {
+public abstract class Field implements INotifiable {
+	public Field(int height, int width, CellFactory cellFactory) throws IndexOutOfBoundsException {
 		if (height <= 0 || width <= 0) {
 			throw new IndexOutOfBoundsException();
 		}
 
 		this.height = height;
 		this.width = width;
-		cells = new Cell[height][width];
+		cells = cellFactory.getCellArray(height, width);
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				cells[i][j] = new Cell(null, j, i, this);
+				cells[i][j] = cellFactory.getCell(null, j, i, this);
 				cells[i][j].setOccupant(new Nobody(cells[i][j]));
 			}
 		}
@@ -49,19 +54,7 @@ public class Field implements INotifiable {
 		spawns.add(spawn);
 	}
 
-	public void display(int move) {
-		StringBuilder builder = new StringBuilder("Move #" + Integer.toString(move) + "\n");
-		builder.append("         T    \n");
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				Cell cell = cells[i][j];
-				builder.append(cell.displayItself());
-			}
-			builder.append("\n");
-		}
-
-		System.out.println(builder.toString());
-	}
+	public abstract void display(int move);
 
 	public void receiveNotification(int notification) {
 		informSpawnsAboutMove(notification);
@@ -77,20 +70,6 @@ public class Field implements INotifiable {
 
 	public boolean isInField(int x, int y) {
 		return x >= 0 && y >= 0 && x < width && y < height;
-	}
-
-	public List<Cell> getAdjacentCells(int x, int y) {
-		List<Cell> result = new ArrayList<>();
-		int[] deltaX = new int[]{0, 0, -1, 1};
-		int[] deltaY = new int[]{-1, 1, 0, 0};
-		for (int i = 0; i < deltaX.length; i++) {
-			int newX = x + deltaX[i];
-			int newY = y + deltaY[i];
-			if (isInField(newX, newY)) {
-				result.add(getCell(newX, newY));
-			}
-		}
-		return result;
 	}
 
 	public void notifyFallenSleepingDrunkard(Drunkard drunkard) {
@@ -134,9 +113,9 @@ public class Field implements INotifiable {
 		}
 	}
 
-	private Cell[][] cells;
-	private final int height;
-	private final int width;
+	protected final Cell[][] cells;
+	protected final int height;
+	protected final int width;
 	private final List<Bottle> bottles = new ArrayList<>();
 	private final List<Drunkard> litDrunkards = new ArrayList<>();
 	private final List<AbstractOccupantSpawn> spawns = new ArrayList<>();

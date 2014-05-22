@@ -10,7 +10,7 @@
  */
 package OccupantFactories;
 
-import common.Field;
+import common.fields.Field;
 
 public abstract class AbstractOccupantSpawn {
 	public AbstractOccupantSpawn(int x, int y, Field field) {

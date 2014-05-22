@@ -12,9 +12,9 @@ package OccupantFactories;
 
 import cell_occupants.Policeman;
 import common.Bfs;
-import common.Cell;
+import common.cells.Cell;
 import common.DoubleDispatch;
-import common.Field;
+import common.fields.Field;
 import common.actor_states.MovingState;
 import common.actor_states.OccupantState;
 
@@ -33,8 +33,8 @@ public class PoliceStation extends AbstractOccupantSpawn {
 		Cell cell = getField().getCell(getX(), getY());
 		Policeman policeman = new Policeman(cell);
 		OccupantState movingState = new MovingState(
-				new Bfs(getField().getLitDrunkards().get(0).getCell(),
-						getField()));
+				new Bfs(getField().getLitDrunkards().get(0).getCell()
+				));
 		policeman.setState(movingState);
 		policeman.setSpawn(this);
 		if (DoubleDispatch.dispatch(policeman, cell.getOccupant()) != null) {

@@ -10,7 +10,7 @@
  */
 package cell_occupants;
 
-import common.Cell;
+import common.cells.Cell;
 import common.CellOccupant;
 
 public class Policeman extends CellOccupant {

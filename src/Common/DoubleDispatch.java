@@ -16,6 +16,8 @@ import cell_occupants.drunkard.FallenDrunkardState;
 import cell_occupants.drunkard.SleepingDrunkardState;
 import common.actor_states.SuccessHandler;
 import common.actor_states.TerminatingState;
+import common.cells.Cell;
+import common.fields.Field;
 
 public class DoubleDispatch {
 	public static Cell dispatch(CellOccupant who, Nobody where) {
@@ -24,20 +26,20 @@ public class DoubleDispatch {
 		return oldCell;
 	}
 
+	private static void applyLight(Cell cell, int depth) {
+		if (depth == 0) {
+			return;
+		}
+		for (Cell cellNeighbour: cell.neighbours()) {
+			cellNeighbour.getCellTraits().applyLight();
+			applyLight(cellNeighbour, depth - 1);
+		}
+	}
+
 	public static Cell dispatch(LampPost who, Nobody where) {
 		Cell oldCell = who.getCell();
 		where.swapOccupants(who);
-
-		// Apply light
-		for (int deltaX = -3; deltaX < 4; deltaX++) {
-			for (int deltaY = -3; deltaY < 4; deltaY++) {
-				int x = who.getCell().getX() + deltaX;
-				int y = who.getCell().getY() + deltaY;
-				if (who.getCell().getField().isInField(x, y)) {
-					who.getCell().getField().getCell(x, y).getCellTraits().applyLight();
-				}
-			}
-		}
+		applyLight(where.getCell(), 3);
 		return oldCell;
 	}
 
@@ -53,7 +55,7 @@ public class DoubleDispatch {
 				who.getSpawn().resetCooldown();
 			}
 		};
-		who.setState(new TerminatingState(new Bfs(goal, field), handler));
+		who.setState(new TerminatingState(new Bfs(goal), handler));
 		return null;
 	}
 
@@ -90,7 +92,7 @@ public class DoubleDispatch {
 					who.getSpawn().resetCooldown();
 				}
 			};
-			who.setState(new TerminatingState(new Bfs(goal, field), handler));
+			who.setState(new TerminatingState(new Bfs(goal), handler));
 		}
 		return null;
 	}

@@ -10,14 +10,16 @@
  */
 package common;
 
+import common.fields.Field;
+import common.fields.SquareField;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class FieldTest {
 	@Test
 	public void adjacentCellsTest() {
-		Field field = new Field(100, 100);
-		Assert.assertEquals(2, field.getAdjacentCells(0, 0).size());
-		Assert.assertEquals(4, field.getAdjacentCells(33, 33).size());
+		Field field = new SquareField(100, 100);
+		Assert.assertEquals(2, field.getCell(0, 0).neighbours().size());
+		Assert.assertEquals(4, field.getCell(33, 33).neighbours().size());
 	}
 }

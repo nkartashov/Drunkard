@@ -12,9 +12,12 @@
 package cell_occupants.drunkard;
 
 import cell_occupants.Bottle;
-import common.Cell;
+import common.cells.Cell;
 import common.CellOccupant;
 import common.DoubleDispatch;
+
+import java.util.List;
+import java.util.Random;
 
 public class NormalDrunkardState extends DrunkardState {
 
@@ -25,24 +28,10 @@ public class NormalDrunkardState extends DrunkardState {
 
 	@Override
 	public void receiveNotification (int notification, CellOccupant occupant) {
-		double rnd = Math.random();
-		int newX = occupant.getCell().getX();
-		int newY = occupant.getCell().getY();
-		if (rnd < 0.25) {
-			newX -= 1;
-		} else if (rnd < 0.5) {
-			newY += 1;
-		} else if (rnd < 0.75) {
-			newY -= 1;
-		} else {
-			newX += 1;
-		}
-
-		if (!occupant.getCell().getField().isInField(newX, newY)) {
-			return;
-		}
-
-		Cell newCell = occupant.getCell().getField().getCell(newX, newY);
+		Random random = new Random();
+		List<Cell> neighbours = occupant.getCell().neighbours();
+		int index = random.nextInt(neighbours.size());
+		Cell newCell = neighbours.get(index);
 	 	Cell oldCell = DoubleDispatch.dispatch(occupant, newCell.getOccupant());
 		if (oldCell != null) {
 			handleMoveResult(oldCell, (Drunkard) occupant);

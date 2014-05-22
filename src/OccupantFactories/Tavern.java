@@ -11,9 +11,9 @@
 package OccupantFactories;
 
 import cell_occupants.drunkard.Drunkard;
-import common.Cell;
+import common.cells.Cell;
 import common.DoubleDispatch;
-import common.Field;
+import common.fields.Field;
 
 public class Tavern extends AbstractOccupantSpawn {
 	public Tavern(int x, int y, Field field) {

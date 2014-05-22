@@ -10,6 +10,8 @@
  */
 package common;
 
+import common.cells.Cell;
+
 public interface PathAlgorithm {
 	public Cell getNextCell(Cell start);
 	public Cell getGoal();

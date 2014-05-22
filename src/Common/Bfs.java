@@ -10,12 +10,13 @@
  */
 package common;
 
+import common.cells.Cell;
+
 import java.util.*;
 
 public class Bfs implements PathAlgorithm {
-	public Bfs(Cell goal, Field field) {
+	public Bfs(Cell goal) {
 		this.goal = goal;
-		this.field = field;
 	}
 
 	@Override
@@ -25,16 +26,16 @@ public class Bfs implements PathAlgorithm {
 
 	@Override
 	public Cell getNextCell(Cell start) {
-		if (start == goal)
+		if (start == goal) {
 			return null;
+		}
 
 		distances.put(start, 0);
 		toVisit.add(start);
-
 		while (!toVisit.isEmpty()) {
 			Cell newCell = toVisit.poll();
 			visited.add(newCell);
-			for (Cell c : field.getAdjacentCells(newCell.getX(), newCell.getY())) {
+			for (Cell c : newCell.neighbours()) {
 				if (!visited.contains(c)) {
 					if (c.isTraversible() || c == goal) {
 						parents.put(c, newCell);
@@ -42,7 +43,7 @@ public class Bfs implements PathAlgorithm {
 						if (c != goal) {
 							toVisit.add(c);
 						} else {
-							break;
+							toVisit.clear();
 						}
 					}
 				}
@@ -60,13 +61,15 @@ public class Bfs implements PathAlgorithm {
 		while (parents.get(current) != start) {
 			current = parents.get(current);
 		}
+		distances.clear();
+		visited.clear();
+		parents.clear();
 		return current;
 	}
 
 	private Cell goal;
-	private Field field;
-	private Set<Cell> visited = new HashSet<>();
-	private Map<Cell, Integer> distances = new HashMap<>();
-	private Map<Cell, Cell> parents = new HashMap<>();
-	private Queue<Cell> toVisit = new ArrayDeque<>();
+	private final Set<Cell> visited = new HashSet<>();
+	private final Map<Cell, Integer> distances = new HashMap<>();
+	private final Map<Cell, Cell> parents = new HashMap<>();
+	private final Queue<Cell> toVisit = new ArrayDeque<>();
 }

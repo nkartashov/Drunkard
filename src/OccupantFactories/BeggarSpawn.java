@@ -13,9 +13,9 @@ package OccupantFactories;
 import cell_occupants.Beggar;
 import cell_occupants.Bottle;
 import common.Bfs;
-import common.Cell;
+import common.cells.Cell;
 import common.DoubleDispatch;
-import common.Field;
+import common.fields.Field;
 import common.actor_states.MovingState;
 import common.actor_states.OccupantState;
 import common.actor_states.PassiveState;
@@ -39,8 +39,8 @@ public class BeggarSpawn extends AbstractOccupantSpawn {
 		OccupantState movingState;
 		if (!getField().getBottles().isEmpty()) {
 			movingState = new MovingState(
-					new Bfs(getField().getBottles().get(0).getCell(),
-							getField()));
+					new Bfs(getField().getBottles().get(0).getCell()
+					));
 		} else {
 			movingState = new PassiveState();
 		}
@@ -64,7 +64,7 @@ public class BeggarSpawn extends AbstractOccupantSpawn {
 				beggar.getState() instanceof PassiveState) {
 			Bottle bottle = getField().getBottles().get(0);
 			Cell goal = bottle.getCell();
-			beggar.setState(new MovingState(new Bfs(goal, getField())));
+			beggar.setState(new MovingState(new Bfs(goal)));
 		}
 	}
 

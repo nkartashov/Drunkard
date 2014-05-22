@@ -1,4 +1,11 @@
-package common;
+package common.cells;
+
+import common.*;
+import common.fields.Field;
+import common.utils.Tuple;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Cell
@@ -12,7 +19,7 @@ package common;
  * (http://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-public class Cell implements IDisplayable, INotifiable {
+public abstract class Cell implements IDisplayable, INotifiable {
 	public Cell(CellOccupant occupant, int x, int y, Field field) throws IndexOutOfBoundsException {
 		if (x < 0 || y < 0) {
 			throw new IndexOutOfBoundsException();
@@ -82,9 +89,34 @@ public class Cell implements IDisplayable, INotifiable {
 		return occupant.isTraversible();
 	}
 
+	public List<Cell> neighbours() {
+		if (neigbouringCells != null) {
+			return neigbouringCells;
+		}
+
+		List<Cell> result = new ArrayList<>();
+		for (Tuple<Integer, Integer> delta: deltas) {
+			int newX = x + delta.fst;
+			int newY = y + delta.snd;
+			if (field.isInField(x + delta.fst, y + delta.snd)) {
+				result.add(field.getCell(newX, newY));
+			}
+		}
+		neigbouringCells = result;
+		return result;
+	}
+
+	protected void addDelta(Tuple<Integer, Integer> delta) {
+		deltas.add(delta);
+	}
+
+	protected abstract void addDeltas();
+
 	private final Field field;
 	private CellOccupant occupant;
 	private int x = -1;
 	private int y = -1;
-	private CellTraits cellTraits = new CellTraits();
+	private final CellTraits cellTraits = new CellTraits();
+	private List<Tuple<Integer, Integer>> deltas = new ArrayList<>();
+	private List<Cell> neigbouringCells = null;
 }

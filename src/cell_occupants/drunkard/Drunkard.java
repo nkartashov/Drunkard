@@ -11,7 +11,7 @@
  */
 package cell_occupants.drunkard;
 
-import common.Cell;
+import common.cells.Cell;
 import common.CellOccupant;
 
 public class Drunkard extends CellOccupant {
