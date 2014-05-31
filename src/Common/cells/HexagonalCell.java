@@ -27,7 +27,7 @@ public class HexagonalCell extends Cell {
 		for (int i = 0; i < deltasX.length; i++) {
 			addDelta(new Tuple<>(deltasX[i], deltasY[i]));
 		}
-		if (getX() % 2 == 0) {
+		if (getY() % 2 == 0) {
 			deltasX = new int[]{1, 1};
 			deltasY = new int[]{-1, 1};
 		} else {
